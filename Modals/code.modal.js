@@ -22,6 +22,9 @@ const codeSchema = new Schema({
   js: {
     type: String,
   },
+  public: {
+    type: Boolean,
+  },
 });
 codeSchema.index({ name: 1, creator: 1 }, { unique: true });
 

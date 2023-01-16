@@ -2,8 +2,13 @@ const router = require("express").Router();
 let User = require("../Modals/user.modal");
 const jwt = require("jsonwebtoken");
 
-router.route("/add").post((req, res) => {
+router.route("/add").post(async (req, res) => {
   const username = { username: req.body.username, password: req.body.password };
+  const x = await User.findOne({ username: req.body.username });
+  console.log(x);
+  if (x) {
+    return res.status(400).json("User Already existed");
+  }
   const newUser = new User(username);
   const TOKEN = jwt.sign({ ...username, _id: newUser }, process.env.SECRET_KEY);
   console.log(process.env.SECRET_KEY, newUser, TOKEN);
@@ -18,7 +23,7 @@ router.route("/signup").post(async (req, res) => {
     console.log(req.body);
     const x = await User.findOne({ username: req.body.username });
     if (x === null) {
-      return res.json("user not found");
+      return res.status(400).json("user not found");
     } else {
       if (x.password === req.body.password) {
         const TOKEN = jwt.sign(
@@ -31,7 +36,7 @@ router.route("/signup").post(async (req, res) => {
         );
         res.json({ username: req.body.username, token: TOKEN });
       } else {
-        return res.json("wrong password");
+        return res.status(400).json("wrong password");
       }
     }
   } catch (e) {

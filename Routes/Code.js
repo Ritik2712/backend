@@ -10,6 +10,7 @@ router.post("/add", [authUSer], (req, res) => {
     css: req.body.css,
     js: req.body.js,
     name: req.body.name,
+    public: req.body.public,
   };
   const newCode = new Code(code);
   console.log(newCode);
@@ -41,6 +42,27 @@ router.put("/update", [authUSer], async (req, res) => {
   }
 });
 
+router.get("/public", async (req, res) => {
+  try {
+    const x = await Code.find({ public: true });
+    res.status(200).json(x);
+  } catch (e) {
+    return res.json(`Error: ${e}`);
+  }
+});
+
+router.get("/getPublic", async (req, res) => {
+  try {
+    const x = await Code.findOne({
+      creator: req.query.username,
+      name: req.query.name,
+    });
+    res.status(200).json(x);
+  } catch (e) {
+    return res.json(`Error: ${e}`);
+  }
+});
+
 router.get("/", [authUSer], async (req, res) => {
   try {
     const x = await Code.find({ creator: req.user.username });
@@ -57,6 +79,9 @@ router.get("/getCode", [authUSer], async (req, res) => {
       name: req.query.name,
     });
     console.log(x);
+    if (x === null) {
+      return res.status(404).json("code not found");
+    }
     res.status(200).json(x);
   } catch (e) {
     return res.json(`Error: ${e}`);

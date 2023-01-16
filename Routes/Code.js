@@ -11,6 +11,9 @@ router.post("/add", [authUSer], (req, res) => {
     js: req.body.js,
     name: req.body.name,
     public: req.body.public,
+    created: new Date(req.body.created),
+    modified: new Date(req.body.created),
+    size: req.body.size,
   };
   const newCode = new Code(code);
   console.log(newCode);
@@ -25,6 +28,8 @@ router.put("/update", [authUSer], async (req, res) => {
     html: req.body.html,
     css: req.body.css,
     js: req.body.js,
+    modified: new Date(req.body.modified),
+    size: req.body.size,
   };
   try {
     const updatedCode = await Code.updateOne(

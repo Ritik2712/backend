@@ -25,6 +25,15 @@ const codeSchema = new Schema({
   public: {
     type: Boolean,
   },
+  created: {
+    type: Date,
+  },
+  modified: {
+    type: Date,
+  },
+  size: {
+    type: String,
+  },
 });
 codeSchema.index({ name: 1, creator: 1 }, { unique: true });
 
